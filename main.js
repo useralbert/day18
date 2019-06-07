@@ -2,6 +2,7 @@ const hbs = require('express-handlebars')
 const express = require('express')
 const mysql = require('mysql')
 const bodyParser = require('body-parser');
+const request = require('request');
 
 const config = require('./config.json');
 

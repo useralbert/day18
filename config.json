@@ -1,0 +1,10 @@
+{"employees":
+    { 
+        "host": "localhost", 
+        "port": 3306, 
+        "user": "Fred", 
+        "password": "aaaaaaa", 
+        "database": "employees", 
+        "connectionLimit": 4 
+    }
+    }

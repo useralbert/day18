@@ -3,7 +3,7 @@
         "host": "localhost", 
         "port": 3306, 
         "user": "Fred", 
-        "password": "aaaaaaa", 
+        "password": "Pq1w3e5s", 
         "database": "employees", 
         "connectionLimit": 4 
     }

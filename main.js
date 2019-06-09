@@ -3,6 +3,7 @@ const express = require('express')
 const mysql = require('mysql')
 const bodyParser = require('body-parser');
 const request = require('request');
+const cookieParser = require('cookie-parser');
 
 const config = require('./config.json');
 

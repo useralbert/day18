@@ -15,20 +15,24 @@
             <h4>Your query of '<code>{{ q }}</code>' returns no result</h2>
         {{else}}
             <div>
-                <table border="1">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each result}}
+                <form action="/display" method="GET"></form>
+                    <table border="1">
+                        <thead>
                             <tr>
-                                <td><button type="submit">{{ this }}</button></td>
+                                <th>Name</th>
                             </tr>
-                        {{/each}}
-                    </tbody>
-                </table>      
+                        </thead>
+                        <tbody>
+                            {{#each result}}
+                                <tr>
+                                    <td>
+                                    <button type="submit">{{ this }}</button>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>  
+                </form>    
             </div>
         {{/if}}
     </div>

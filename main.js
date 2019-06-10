@@ -4,11 +4,13 @@ const mysql = require('mysql')
 const bodyParser = require('body-parser');
 const request = require('request');
 const cookieParser = require('cookie-parser');
-
 const config = require('./config.json');
 
-const SQL_SELECT_BGG_GAME = "select * from employees limit ? offset ?";
-const SQL_SELECT_BGG_GAME_BY_NAME = "select name from game";
+//const SQL_SELECT_BGG_GAME = "select * from employees limit ? offset ?";
+const SQL_SELECT_BGG_GAME_BY_NAMES = "select name from game where name like ?";
+const SQL_SELECT_BGG_GAME_BY_NAME = "select name, year, ranking, users_rated from game where name = ?"; 
+
+const SQL_SELECT_BGG_COMMENT_BY_USER_RATING_C_TEXT = "select user, rating, c_text from comment where gid = ? limit ? offset ?";
 
 //const Pool = mysql.createPool(config.bgg)
 const pool = mysql.createPool(require('./config.json'));
@@ -23,21 +25,10 @@ app.set('views', __dirname + '/views');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post('/search', (req, resp) => {
-    const q = req.body.q;
-    //const cart = JSON.parse(req.body.cart);
-    pool.getConnection((err, conn) => {
-        if (err) {
-            resp.status(500);
-            resp.type('text/plain');
-            resp.send(err);
-            return;
-        }
-        //Perform our query
-        //conn.query(SQL_SELECT_FILM, //(err, result) => {
-        //conn.query(SQL_SELECT_FILM_WHERE, 
-        conn.query(SQL_SELECT_BGG_GAME_BY_NAME,
-            [ ],
+app.get('/display/:gameId', (req, resp) => {
+    const gameId = parseInt(req.params.gameId);
+    
+        conn.query(SQL_SELECT_BGG_GAME_BY_NAME, [ gameId ],
             (err, result) => {
             //Release the connection
                 conn.release();
@@ -51,10 +42,13 @@ app.post('/search', (req, resp) => {
                 }
                 resp.status(200);
                 resp.type('text/html');
-                resp.render('games', { 
-                    name: name, 
+                resp.render('comment', { 
+                    
                     result: result,
-                    q: q,
+                    name: result.name,
+                    year: result.year,
+                    user_rated: result.user_rated,
+                    ranking: result.ranking,
                     noResult: result.length <= 0,
                     layout: false 
                 });
@@ -63,15 +57,7 @@ app.post('/search', (req, resp) => {
     });
 })
 
- /*   resp.status(200)
-    resp.type('text/html')
-    resp.render('search', { 
-        name: name,
-        cart: JSON.stringify(cart),
-        items: cart,
-        layout: false
-    }) */
-
+ 
 
 
 app.get('/search', (req, resp) => {
@@ -82,12 +68,9 @@ app.get('/search', (req, resp) => {
             resp.type('text/plain');
             resp.send(err);
             return;
-        }
-        //Perform our query
-        //conn.query(SQL_SELECT_FILM, //(err, result) => {
-        //conn.query(SQL_SELECT_FILM_WHERE, 
-        conn.query(SQL_SELECT_BGG_GAME_BY_NAME,
-            [ ],
+        }   
+        conn.query(SQL_SELECT_BGG_GAME_BY_NAMES,
+            [ `%${q}%` ],
             (err, result) => {
             //Release the connection
                 conn.release();
